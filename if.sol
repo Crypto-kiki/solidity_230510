@@ -196,10 +196,10 @@ contract IF2 {
 // ENUM : 열거형, 새로운 상태를 추가하지는 못함.
 contract ENUM {
     enum Food {
-        Chicken,
-        Sushi,
-        Bread,
-        Coconut
+        Chicken,  // - 0
+        Sushi,    // - 1
+        Bread,    // - 2
+        Coconut   // - 3
     }
 
     Food a;
@@ -221,5 +221,128 @@ contract ENUM {
     function getABC() public view returns(Food, Food, Food) {
         return (a, b, c);
     }
+    /* set을 안하고 빈값인 상태에서 getABC()를 실행하면 아래와 같이 나옴. 즉, 문자열로 저장되는게 아니라는 것!
+        또한 값이 uint8 (2자리)로 나옴! 따라서 uint8과 형변환이 가능함.
+        0:
+        uint8: 0
+        1:
+        uint8: 0
+        2:
+        uint8: 0
+    */
+    /* 값을 한 번씩 넣고 실행하면, 아래와 같음. 즉 enum에서의 위치임.
+        0:
+        uint8: 0
+        1:
+        uint8: 1
+        2:
+        uint8: 2
+    */
+    /*
+        uint8 같은 경우는 숫자가 uint8에 들어가서 결과도 uint8이 나옴.
+        하지만, enum은 string이 들어가면 숫자인 uint8로 나옴. 따라서 숫자를 문자의 의미로 관리할 수 있음.
+        uint8 = 1bytes = 16진수 2자리 ff까지가능 = 즉 16 * 16까지 가능함.
+        한정적일 수 있지만, 변수가 256개까지 담기는거면 다른방법을 고안하는게 나을듯!/*
+    */
+    function getABC2() public view returns(uint8, uint8, uint8) {
+        return (uint8(a), uint8(b), uint8(c));
+    }
+}
+
+
+contract EMUM2 {
+    enum color {
+        red,
+        orange,
+        yellow,
+        green,
+        blue,
+        indigo,
+        purple
+    }
+
+    color c;
+
+    function setC() public {
+        c = color.red;
+    }
+
+    function setC2(uint _n) public {
+        c = color(_n);
+    }
+
+    function getC() public view returns(color) {
+        return c;
+    }
+}
+
+contract ENUM3 {
+    // array는 우리가 필요한 곳을 모아서 해체시키고 (푸시, 팝) 등 할 수 있지만
+    // enum은 정해놓은 규칙에 따라서 변수가 변하는거임.
+    enum Status {
+        neutral,
+        high,
+        low
+    }
+
+    /*  enum과 string array 차이점
+        1. enum은 안에있는 값이 안변함.
+        string[3] st2 = ["neutral", "high", "low"];
+        2. enum은 uint8동일하지만 st2는 동적으로 용량이 변함
+        3. 가독성
+    */
+
+
+    Status st;  // 이렇게만 선언된 상태에서는 neutral임. 0이니까!
+    uint a=5;
+
+    // function higher() public {
+    //     a++;
+    //     // 7이상
+    //     if(a >= 7) {
+    //         st = Status.high;
+    //     } else {
+    //         st = Status.neutral;
+    //     }
+    // }
     
+    // function lower() public {
+    //     a--;
+    //     // 3이하
+    //     if(a <= 3) {
+    //         st = Status.low;
+    //     } else {
+    //         st = Status.neutral;
+    //     }
+    // }
+
+    function higher() public {
+        a++;
+        setA();
+    }
+    
+    function lower() public {
+        a--;
+        setA();
+    }
+
+    
+    function setA() public {
+        if(a >= 7) {
+            st = Status.high;
+        } else if(a<= 3) {
+            st = Status.low;
+        } else {
+            st = Status.neutral;
+        }
+    }
+    
+
+    function getA() public view returns(uint) {
+        return a;
+    }
+
+    function getST() public view returns(Status) {
+        return st;
+    }
 }
