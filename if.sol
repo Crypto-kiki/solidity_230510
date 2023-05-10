@@ -346,3 +346,18 @@ contract ENUM3 {
         return st;
     }
 }
+
+
+contract BOOL {
+    // bool 기본값 : false.
+    bool isFun;
+
+    function getVar() public view returns(bool) {
+        return isFun;
+    }
+
+    function fun() public {
+        isFun = !isFun;
+    }
+
+}
