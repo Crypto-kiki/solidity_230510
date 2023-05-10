@@ -65,6 +65,8 @@ contract IF{
     Student Bob;
     Student Charlie;
 
+    Student[] Students;
+
     /*
     1. 1, Alice, 90 -> setA()
     2. 2, Bob, 75 -> setB()
@@ -123,4 +125,101 @@ contract IF{
         return (Alice, Bob, Charlie);
     }
 
+    function pushStudent(uint _number, string memory _name, uint _score) public {
+        string memory _credit;
+        if (_score >= 90) {
+            _credit = "A";
+        } else if (_score >= 80) {
+            _credit = "B";
+        } else if (_score >= 70) {
+            _credit = "C";
+        } else {
+            _credit = "F";
+        }
+
+        Students.push(Student(_number, _name, _score, _credit));
+    }
+
+    // 가장 요약된 코드!! 함수도 들어갈 수 있음. 단, setGrade3함수는 인풋값이 하나 필요함!!
+    function pushStudent2(uint _number, string memory _name, uint _score) public {
+        Students.push(Student(_number, _name, _score, setGrade3(_score)));
+    }
+
+    function getStudent() public view returns(Student[] memory) {
+        return Students;
+    }
+
+    function setGrade3(uint _score) public pure returns(string memory _credit) {
+        if (_score >= 90) {
+            return "A";
+        } else if (_score >= 80) {
+            return "B";
+        } else if (_score >= 70) {
+            return "C";
+        } else {
+            return "F";
+        }
+    }
+
+}
+
+
+contract IF2 {
+    // 50이상이거나 10보다 작으면 (or)
+    // 50이상이고 3의 배수이면 (and)
+    function setNumber(uint _n) public pure returns(string memory) {
+        if(_n >= 50 || _n <=10) {
+            return "A";
+        // } else if(_n >= 50 && _n % 3 == 0) {
+            } else if(_n >= 70 && _n % 3 == 0) {
+            return "B";
+        } else {
+            return "C";
+        }
+        // 위 함수는 50이라는 범위가 겹치기 때문에 else if 문으로 절대 안넘어옴. 따라서 else if 문에서의 _n 범위를 바꿔줘야함.
+    }
+
+
+    // 70이상이거나 20이하이면 , 50이상이고 5의 배수이면
+    function setNumber2(uint _n) public pure returns(string memory) {
+        if (_n >= 70 || 20 <= _n) {
+            return "o";
+        } else if (_n >= 50 && _n % 5 == 0) {
+            return "x";
+        } else {
+            return "y";
+        }
+    }
+}
+
+
+// ENUM : 열거형, 새로운 상태를 추가하지는 못함.
+contract ENUM {
+    enum Food {
+        Chicken,
+        Sushi,
+        Bread,
+        Coconut
+    }
+
+    Food a;
+    Food b;
+    Food c;
+
+    function setA() public {
+        a = Food.Chicken;
+    }
+
+    function setB() public {
+        b = Food.Sushi;
+    }
+
+    function setC() public {
+        c = Food.Bread;
+    }
+
+    function getABC() public view returns(Food, Food, Food) {
+        return (a, b, c);
+    }
+    
 }
